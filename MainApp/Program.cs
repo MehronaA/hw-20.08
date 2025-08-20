@@ -2,69 +2,89 @@
 using Domain.Entities;
 using Infrastructure.Services;
 
-var MovieService = new MovieService();
-var movie1 = new Movie()
+while (true)
 {
-    Title = "La La Land",
-    Director = "Damien Chazelle",
-    Year = 2016
-};
-var movie2 = new Movie()
-{
-    Title = "Call Me by Your Name",
-    Director = "Luca Guadagnino",
-    Year = 2017
-};
-var movie3 = new Movie()
-{
-    Title = "A Star Is Born",
-    Director = "Bradley Cooper",
-    Year = 2017
-};
-var movie4 = new Movie()
-{
-    Title = "Little Women",
-    Director = "Greta Gerwig",
-    Year = 2019
-};
-MovieService.CreateMovie(movie1);
-MovieService.CreateMovie(movie2);
-MovieService.CreateMovie(movie3);
-MovieService.CreateMovie(movie4);
-Console.WriteLine("Movies added");
-Console.WriteLine("_______________");
+    Console.WriteLine("_________________________________________");
+    var MovieService = new MovieService();
+    Console.WriteLine("What would you do?");
+    Console.WriteLine("1.Insert movie");
+    Console.WriteLine("2.Get all movies");
+    Console.WriteLine("3.Change movie's information");
+    Console.WriteLine("4.Delete movie from list of movies");
+    Console.WriteLine("5.find movie by id");
+    Console.WriteLine("6.Finish programm");
+    Console.Write("Choose operation you'd like to do: ");
+    Console.WriteLine("_________________________________________");
 
-Console.WriteLine("All movies");
+    int choosed = Convert.ToInt32(Console.ReadLine());
+    if (choosed == 1)
+    {
+        Console.Write("Movies title: ");
+        var title = Console.ReadLine();
+        Console.Write("Movies Director: ");
+        var director = Console.ReadLine();
+        Console.Write("Released year: ");
+        var year = Convert.ToInt32(Console.ReadLine());
+        var movie = new Movie()
+        {
+            Title = title,
+            Director = director,
+            Year = year
+        };
+        var created = MovieService.CreateMovie(movie);
+        if (created > 0) Console.WriteLine("Your movie succesfully created");
+    }
+    else if (choosed == 2)
+    {
+        Console.WriteLine("Id\tTitle\tDirector\tYear");
+        var allmovies = MovieService.GetMovies();
+        foreach (var movie in allmovies)
+        {
+            Console.WriteLine($"{movie.Id}\t{movie.Title}\t{movie.Director}\t{movie.Year}");
+        }
+    }
+    else if (choosed == 3)
+    {
+        Console.Write("Write movie's id: ");
+        int id = Convert.ToInt32(Console.ReadLine());
+        Console.Write("Movies title: ");
+        var title = Console.ReadLine();
+        Console.Write("Movies Director: ");
+        var director = Console.ReadLine();
+        Console.Write("Released year: ");
+        var year = Convert.ToInt32(Console.ReadLine());
+        var uppdatedmovie = new Movie()
+        {
+            Id = id,
+            Title = title,
+            Director = director,
+            Year = year
+        };
+        var updated = MovieService.UpdateMovie(uppdatedmovie);
+        if (updated > 0)
+        {
+            Console.WriteLine("Movie updated");
+        }
+    }
+    else if (choosed == 4)
+    {
+        Console.Write("Write movie's id that you want to delete:");
+        var id = Convert.ToInt32(Console.ReadLine());
+        var delete = MovieService.DeleteMovie(id);
+        if (delete > 0) Console.WriteLine("Movie deleted");
+    }
+    else if (choosed == 5)
+    {
+        Console.Write("Write movie id:");
+        var movieId = Convert.ToInt32(Console.ReadLine());
+        var foundMovie = MovieService.GetMovieById(movieId);
+        if (foundMovie != null) Console.WriteLine($"Title: {foundMovie.Title}\t Director: {foundMovie.Director}\tYear: {foundMovie.Year}");
+        else Console.WriteLine("Movie with this id doesn't exist");
+    }
+    else if (choosed == 6)
+    {
+        Console.WriteLine("Finished programm");
+        break;
+    }
 
-var movies = MovieService.GetMovies();
-foreach (var item in movies)
-{
-    Console.WriteLine($"{item.Id}\t{item.Title}\t{item.Director}\t{item.Year}");
 }
-
-var movie5 = new Movie()
-{
-    Title = "Purple Hearts",
-    Director = "Elizabeth Allen Rosenbaum",
-    Year = 2022
-};
-var crmv = MovieService.CreateMovie(movie5);
-if(crmv>0)Console.WriteLine("Added 1 movies");
-
-var updatemovie = new Movie()
-{
-    Id = 3,
-    Title = "A Star Is Born",
-    Director = "Bradley Cooper",
-    Year = 2018
-};
-var upmv = MovieService.UpdateMovie(updatemovie);
-if(upmv>0)Console.WriteLine("Movie updated");
-
- var dlmv=MovieService.DeleteMovie(2);
-if (dlmv > 0) Console.WriteLine("Movie deleted");
-
-var GetMovieById = MovieService.GetMovieById(1);
-Console.WriteLine("find by id");
-Console.WriteLine($"{GetMovieById.Id}\t {GetMovieById.Title}\t {GetMovieById.Director}\t{GetMovieById.Year}");
-
